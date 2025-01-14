@@ -1,4 +1,21 @@
+using CrudEFCoreMysql.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+//Cadena de conexion a la base de datos Mysql
+var connectionString = "server=ANDY; port=3306; database=EFCoreMysql; user=root; password=root; Persist Security Info=False; Connect Timeout=300";
+
+var serverVersion = new MySqlServerVersion(new Version(9, 1, 0));
+
+//Configuración a la conexion de MySql
+builder.Services.AddDbContext<ApplicationDbContext>(
+    dbContextOptions => dbContextOptions.UseMySql(connectionString, serverVersion)
+    //Solo para etapa de desarrollo, no producción
+    .LogTo(Console.WriteLine, LogLevel.Information)
+    .EnableSensitiveDataLogging()
+    .EnableDetailedErrors()
+    );
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
